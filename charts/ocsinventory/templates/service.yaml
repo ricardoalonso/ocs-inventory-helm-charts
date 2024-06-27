@@ -6,7 +6,7 @@ metadata:
     {{- include "ocsinventory.labels" . | nindent 4 }}
 spec:
   ports:
-    - port: 80
+    - port: 8080
       targetPort: http
       protocol: TCP
       name: http
