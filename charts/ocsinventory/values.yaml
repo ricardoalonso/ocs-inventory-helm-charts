@@ -6,7 +6,7 @@
 ## https://hub.docker.com/r/ocsinventory/ocsinventory-docker-image
 #
 image:
-  repository: ocsinventory/ocsinventory-docker-image
+  repository: quay.io/ricardoalonsos/ocs-inventory
   pullPolicy: IfNotPresent
   tag: "2.12.1"
 
