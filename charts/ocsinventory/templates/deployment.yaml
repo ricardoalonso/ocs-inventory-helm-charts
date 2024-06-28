@@ -87,7 +87,6 @@ spec:
           configMap:
             name: {{ template "ocsinventory.fullname" . }}-config
             defaultMode: 420
-...
 {{- if .Values.proxy.enabled }}
 ---
 apiVersion: apps/v1
@@ -106,7 +105,7 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}-proxy
-      {{- include "ocsinventory.labels" . | nindent 8 }}
+      {{- include "ocsinventory.labels" . | nindent 6 }}
   template:
     metadata:
       labels:
