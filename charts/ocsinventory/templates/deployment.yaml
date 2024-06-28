@@ -88,8 +88,8 @@ spec:
             name: {{ template "ocsinventory.fullname" . }}-config
             defaultMode: 420
 ...
----
 {{- if .Values.proxy.enabled }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -158,4 +158,3 @@ spec:
           name: {{ .Release.Name }}-proxyconf
         name: {{ .Release.Name }}-proxyconf
 {{- end }}
-...
