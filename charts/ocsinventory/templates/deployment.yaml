@@ -127,13 +127,13 @@ spec:
         - name: OCS_INVENTORY_PORT
           value: "8080"
         - name: READ_TIMEOUT
-          value: {{ .Values.proxy.readTimeout }}
+          value: "{{ .Values.proxy.readTimeout }}"
         - name: CONNECT_TIMEOUT
-          value: {{ .Values.proxy.connectTimeout }}
+          value: "{{ .Values.proxy.connectTimeout }}"
         - name: SEND_TIMEOUT
-          value: {{ .Values.proxy.sendTimeout }}
+          value: "{{ .Values.proxy.sendTimeout }}"
         - name: MAX_BODY_SIZE
-          value: {{ .Values.proxy.maxBodySize }}
+          value: "{{ .Values.proxy.maxBodySize }}"
         - name: PORT_TYPE
         image: {{ .Values.proxy.image }}
         imagePullPolicy: Always
