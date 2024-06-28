@@ -73,6 +73,24 @@ mariadb:
     username: ""
     password: ""
 
+## Proxy configuration
+proxy:
+  enabled: true
+  image: docker.io/nginxinc/nginx-unprivileged:latest
+  replicaCount: 1
+  authFile: ocsapi.htpasswd
+  readTimeout: 300
+  connectTimeout: 300
+  sendTimeout: 300
+  maxBodySize: 1G
+  deploymentAnnotations: {}
+  podAnnotations: {}
+  hostname: ""
+  auth:
+    username: "admin"
+    password: "admin"
+
+
 ## Allowing use of ingress controllers
 ## https://kubernetes.io/docs/concepts/services-networking/ingress/
 #

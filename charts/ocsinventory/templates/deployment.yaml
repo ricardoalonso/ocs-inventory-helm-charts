@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -86,3 +87,75 @@ spec:
           configMap:
             name: {{ template "ocsinventory.fullname" . }}-config
             defaultMode: 420
+...
+---
+{{- if .Values.proxy.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-proxy
+    {{- include "ocsinventory.labels" . | nindent 4 }}
+  name: {{ .Release.Name }}-proxy
+  {{- if .Values.proxy.deploymentAnnotations }}
+  annotations:
+    {{ toYaml .Values.proxy.deploymentAnnotations | indent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.proxy.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-proxy
+      {{- include "ocsinventory.labels" . | nindent 8 }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-proxy
+        {{- include "ocsinventory.labels" . | nindent 8 }}
+      {{- if .Values.proxy.podAnnotations }}
+      annotations:
+        {{ toYaml .Values.proxy.podAnnotations | indent 8 }}
+      {{- end }}
+    spec:
+      containers:
+      - env:
+        - name: LISTEN_PORT
+          value: "8080"
+        - name: API_AUTH_FILE
+          value: {{ .Values.proxy.authFile }}
+        - name: OCS_INVENTORY_SERVER
+          value: {{ template "ocsinventory.fullname" . }}
+        - name: OCS_INVENTORY_PORT
+          value: "8080"
+        - name: READ_TIMEOUT
+          value: {{ .Values.proxy.readTimeout }}
+        - name: CONNECT_TIMEOUT
+          value: {{ .Values.proxy.connectTimeout }}
+        - name: SEND_TIMEOUT
+          value: {{ .Values.proxy.sendTimeout }}
+        - name: MAX_BODY_SIZE
+          value: {{ .Values.proxy.maxBodySize }}
+        - name: PORT_TYPE
+        image: {{ .Values.proxy.image }}
+        imagePullPolicy: Always
+        name: nginx-unprivileged
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/nginx/auth
+          name: {{ .Release.Name }}-auth
+        - mountPath: /etc/nginx/templates
+          name: {{ .Release.Name }}-proxyconf
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: {{ .Release.Name }}-auth
+        name: {{ .Release.Name }}-auth
+      - configMap:
+          defaultMode: 420
+          name: {{ .Release.Name }}-proxyconf
+        name: {{ .Release.Name }}-proxyconf
+{{- end }}
+...
