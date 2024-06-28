@@ -89,6 +89,39 @@ proxy:
   auth:
     username: "admin"
     password: "admin"
+  nginxConfig: |
+    # OCS server configuration
+    # 
+    server {
+      listen ${LISTEN_PORT} ${PORT_TYPE} default_server;
+  
+      location / {
+        proxy_redirect          off;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+        proxy_set_header        Host              $http_host;
+        proxy_set_header        X-Real-IP         $remote_addr;
+        proxy_set_header        X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Frame-Options   SAMEORIGIN;
+        proxy_pass              http://${OCS_INVENTORY_SERVER}:${OCS_INVENTORY_PORT};
+      }
+
+
+      location /ocsapi {
+        auth_basic \"OCS Api area\";
+        auth_basic_user_file    /etc/nginx/auth/${API_AUTH_FILE};
+        proxy_pass              http://${OCS_INVENTORY_SERVER}:${OCS_INVENTORY_PORT}/ocsapi;
+      }
+    
+      location /ocsinventory {
+        auth_basic              \"OCS Api area\";
+        auth_basic_user_file    /etc/nginx/auth/${API_AUTH_FILE};
+        proxy_read_timeout      ${READ_TIMEOUT};
+        proxy_connect_timeout   ${CONNECT_TIMEOUT};
+        proxy_send_timeout      ${SEND_TIMEOUT};
+        client_max_body_size    ${MAX_BODY_SIZE};
+        proxy_pass              http://${OCS_INVENTORY_SERVER}:${OCS_INVENTORY_PORT}/ocsinventory;
+      }
+    }
 
 
 ## Allowing use of ingress controllers
