@@ -107,13 +107,13 @@ proxy:
 
 
       location /ocsapi {
-        auth_basic \"OCS Api area\";
+        auth_basic              "OCS Protected area";
         auth_basic_user_file    /etc/nginx/auth/${API_AUTH_FILE};
         proxy_pass              http://${OCS_INVENTORY_SERVER}:${OCS_INVENTORY_PORT}/ocsapi;
       }
     
       location /ocsinventory {
-        auth_basic              \"OCS Api area\";
+        auth_basic              "OCS Protected area";
         auth_basic_user_file    /etc/nginx/auth/${API_AUTH_FILE};
         proxy_read_timeout      ${READ_TIMEOUT};
         proxy_connect_timeout   ${CONNECT_TIMEOUT};
